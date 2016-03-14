@@ -46,7 +46,7 @@ onNativeMessage(data);
 
 var onError = function(event) {
   console.log(event.data);
-  setTimeout(open,3000);
+  // setTimeout(open,3000);
 } 
 
 function sendMessage(strings) {
@@ -67,6 +67,7 @@ function sendRunningTabs(close) {
       if (close == 1)
         chrome.tabs.remove(tab.id);
         });
+      console.log(listOfTabs);
       var json = JSON.stringify(listOfTabs);
       console.log(json);
       sendMessage(json);
