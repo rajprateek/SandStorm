@@ -1,10 +1,14 @@
-﻿namespace Windows
+﻿using System.Linq;
+
+namespace Windows
 {
     internal class InternetExplorer
     {
+        public const string Name = "InternetExplorer";
+
         internal static string[] Save(bool close)
         {
-            dynamic shell = Utils.getShell();
+            dynamic shell = Utils.GetShell();
 
             string[] files = new string[shell.Windows().Count];
 
@@ -26,8 +30,8 @@
 
         internal static void Restore(string[] urls)
         {
-            dynamic shell = Utils.getShell();
-            foreach (string url in urls)
+            dynamic shell = Utils.GetShell();
+            foreach (string url in urls.Where(u => u != null && u.Any()))
             {
                 shell.Open(url);
             }

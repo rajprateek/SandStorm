@@ -1,5 +1,4 @@
-﻿using Chrome;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.NetworkInformation;
@@ -11,9 +10,9 @@ namespace Sessions
     [Serializable]
     public class Session
     {
-        internal static string ONESYNC_DIR = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\OneSync";
+        
 
-        internal Dictionary<string, string[]> OfficeDictionary { get; set; }
+        /*internal Dictionary<string, string[]> OfficeDictionary { get; set; }
 
         internal Tab[] tabs { get; set; }
 
@@ -75,6 +74,6 @@ namespace Sessions
                 }
             }
             return macAddresses;
-        }
+        }*/
     }
 }

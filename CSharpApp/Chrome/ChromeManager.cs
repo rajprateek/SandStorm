@@ -2,35 +2,28 @@
 using System.Diagnostics;
 using WebSocketSharp.Server;
 using Newtonsoft.Json;
-
-
+using Sessions;
 
 namespace Chrome
 {
-    public class ChromeManager
+    public class ChromeManager : ISessionHandler
     {
-        public Tab[] tabs;
-        public WebSocketServer socket;
+        public static Tab[] tabs;
+        public static WebSocketServer socket;
 
-        public  Tab[] getChromeSession(bool closeAll)
+        public string Name => "Chrome";
+        public string SaveSession(bool closeApp)
         {
             if (Process.GetProcessesByName("chrome").Length > 0)
             {
                 string id = "";
-                if (closeAll)
-                {
-                    id = "2";
-                }
-                else
-                {
-                    id = "1";
-                }
+                id = closeApp ? "2" : "1";
                 string stringToSend = "{\"type\":" + id + "}";
 
                 socket.WebSocketServices["/extension"].Sessions.Broadcast(stringToSend);
                 Debug.WriteLine("HERE");
 
-                
+
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
                 Debug.WriteLine("HERE");
@@ -39,8 +32,8 @@ namespace Chrome
 
                 while (tabs == null)
                 {
-                    Debug.WriteLine("HERE");
-                    Debug.WriteLine(tabs);
+                    //Debug.WriteLine("HERE");
+                    //Debug.WriteLine(tabs);
 
                     //float time = (float)stopWatch.Elapsed.TotalSeconds;
                     //if (time > 2.0f)
@@ -54,29 +47,26 @@ namespace Chrome
 
                 Debug.WriteLine("HERE");
 
-                return tabs;
+                return JsonConvert.SerializeObject(tabs);
             }
             else
             {
                 Debug.WriteLine("HERE2");
                 Console.WriteLine("HERE2");
-                return new Tab[] { };
+                return JsonConvert.SerializeObject(new Tab[] { });
             }
-
         }
 
-        public  void openChromeSession(Tab[] tabs2)
+        public void RestoreSession(string data)
         {
-            if (tabs2.Length == 0) return;
+            Tab[] tabsToRestore = JsonConvert.DeserializeObject<Tab[]>(data);
+
+            if (tabsToRestore.Length == 0) return;
 
             Process.Start("chrome.exe");
-            string msgToSend = "{\"type\":3, \"data\":" + JsonConvert.SerializeObject(tabs2) + "}";
+            string msgToSend = "{\"type\":3, \"data\":" + JsonConvert.SerializeObject(tabsToRestore) + "}";
             socket.WebSocketServices["/extension"].Sessions.Broadcast(msgToSend);
-
-
         }
-
-
     }
 
 

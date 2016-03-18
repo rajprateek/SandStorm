@@ -5,9 +5,11 @@ namespace Office
 {
     internal class Word
     {
+        public const string Name = "Word";
+
         internal static string[] Save(bool save)
         {
-            object o = Utils.getObject("Word");
+            object o = Utils.GetObject(Name);
 
             Application app;
 
@@ -45,7 +47,7 @@ namespace Office
         {
             if (urls == null || urls.Length == 0) return;
 
-            object o = Utils.getObject("Word");
+            object o = Utils.GetObject(Name);
 
             Application app;
 

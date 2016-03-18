@@ -5,9 +5,11 @@ namespace Office
 {
     internal class PowerPoint
     {
+        public const string Name = "PowerPoint";
+
         internal static string[] Save(bool save)
         {
-            object o = Utils.getObject("PowerPoint");
+            object o = Utils.GetObject(Name);
 
             Application app;
 
@@ -44,7 +46,7 @@ namespace Office
         {
             if (urls == null || urls.Length == 0) return;
 
-            object o = Utils.getObject("PowerPoint");
+            object o = Utils.GetObject(Name);
 
             Application app;
 

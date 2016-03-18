@@ -1,10 +1,14 @@
-﻿namespace Windows
+﻿using System.Linq;
+
+namespace Windows
 {
     internal class FileExplorer
     {
+        public const string Name = "FileExplorer";
+
         internal static string[] Save(bool close)
         {
-            dynamic shell = Utils.getShell();
+            dynamic shell = Utils.GetShell();
 
             string[] files = new string[shell.Windows().Count];
 
@@ -26,8 +30,8 @@
 
         internal static void Restore(string[] files)
         {
-            dynamic shell = Utils.getShell();
-            foreach (string file in files)
+            dynamic shell = Utils.GetShell();
+            foreach (string file in files.Where(f => f != null && f.Any()))
             {
                 shell.Open(file);
             }

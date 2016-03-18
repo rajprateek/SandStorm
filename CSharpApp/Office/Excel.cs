@@ -5,9 +5,11 @@ namespace Office
 {
     internal class Excel
     {
+        public const string Name = "Excel";
+
         internal static string[] Save(bool save)
         {
-            object o = Utils.getObject("Excel");
+            object o = Utils.GetObject(Name);
 
             Application app;
 
@@ -44,7 +46,7 @@ namespace Office
         {
             if (urls == null || urls.Length == 0) return;
 
-            object o = Utils.getObject("Excel");
+            object o = Utils.GetObject(Name);
 
             Application app;
 

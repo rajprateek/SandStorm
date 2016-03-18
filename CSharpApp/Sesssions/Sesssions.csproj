@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -39,23 +43,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileHandler.cs" />
+    <Compile Include="ISessionHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="SessionManager.cs" />
+    <Compile Include="Win32.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Chrome\Chrome.csproj">
-      <Project>{b0f90e7d-8d0f-44e6-8095-e962fec4bf9d}</Project>
-      <Name>Chrome</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Office\Office.csproj">
-      <Project>{3f6d4da3-2c1e-4fda-b16c-f2c5d97a5bb8}</Project>
-      <Name>Office</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Windows\Windows.csproj">
-      <Project>{45cead9a-3702-4fe1-b1c4-d282b7ec472f}</Project>
-      <Name>Windows</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

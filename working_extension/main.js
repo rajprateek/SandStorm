@@ -82,18 +82,22 @@ function openRunningTabs(json) {
   for (var i = 0; i < len; ++i) {
     var tab = list[i];
     if (lastWindowIndex == -1) {
+		console.log("1");
       lastWindowIndex = tab.windowId;
       chrome.tabs.update({ "url": tab.url });
     } else if (lastWindowIndex != tab.windowId) {
+	console.log("2");
       chrome.windows.create({ "focused": true });
       chrome.windows.update(chrome.windows.WINDOW_ID_CURRENT, { "state": "maximized" });
       lastWindowIndex = tab.windowId;
       chrome.tabs.update({ "url": tab.url });
     } else {
+	console.log("3");
       var tab2 = {
         "active": tab.active,
         "index": tab.index,
         "url": tab.url,
+		"windowId": chrome.windows.WINDOW_ID_CURRENT
       };
       chrome.tabs.create(tab2);
     }

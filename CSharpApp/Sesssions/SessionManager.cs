@@ -1,42 +1,71 @@
-﻿using Chrome;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Newtonsoft.Json;
 
 namespace Sessions
 {
     public class SessionManager
     {
-        public static void NewSession(string name, bool closeAll, ChromeManager chromeManager)
+        internal static string OnesyncDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\OneSync";
+
+        private readonly IEnumerable<ISessionHandler> _sessionHandlers;
+
+        public SessionManager(IEnumerable<ISessionHandler> sessionHandlers)
         {
-            Session session = new Session(name);
+            this._sessionHandlers = sessionHandlers;
+        }
+
+        public void NewSession(string name, bool closeAll)
+        {
+            Dictionary<string, string> session = _sessionHandlers.ToDictionary(sessionHandler => sessionHandler.Name, sessionHandler => sessionHandler.SaveSession(closeAll));
+
+            string res = JsonConvert.SerializeObject(session);
+            string path = GetPath(name);
+            File.WriteAllText(path, res);
+
+            /*Session session = new Session(name);
             session.OfficeDictionary = Office.Utils.SaveAll(closeAll);
             session.tabs = chromeManager.getChromeSession(closeAll);
             session.ExplorerDictionary = Windows.Utils.SaveAll(closeAll);
             session.Serialize();
-            chromeManager.tabs = null;
+            chromeManager.tabs = null;*/
         }
 
-        public static void RestoreSession(string name, ChromeManager chromeManager)
+        public void RestoreSession(string name)
         {
-            Session session = Session.DeSerialize(name);
+            string path = GetPath(name);
+
+            var res = File.ReadAllText(path);
+
+            Dictionary<string, string> session = JsonConvert.DeserializeObject<Dictionary<string, string>>(res);
+
+            foreach (var sessionHandler in _sessionHandlers)
+            {
+                sessionHandler.RestoreSession(session[sessionHandler.Name]);
+            }
+
+            /*Session session = Session.DeSerialize(name);
             if (session == null) return;
             Office.Utils.RestoreAll(session.OfficeDictionary);
             chromeManager.openChromeSession(session.tabs);
-            Windows.Utils.RestoreAll(session.ExplorerDictionary);
+            Windows.Utils.RestoreAll(session.ExplorerDictionary);*/
         }
 
         public static void RemoveSession(string name)
         {
-            if (Directory.Exists(Session.ONESYNC_DIR))
+            if (Directory.Exists(OnesyncDir))
             {
-                File.Delete(Session.ONESYNC_DIR + "\\" + name + ".1sync");
+                File.Delete(GetPath(name));
             }
         }
 
-        public static string[] GetAllSessions()
+        public static string[] GetAllSessionNames()
         {
-            if (Directory.Exists(Session.ONESYNC_DIR))
+            if (Directory.Exists(OnesyncDir))
             {
-                string[] availableSessions = Directory.GetFiles(Session.ONESYNC_DIR, "*.1sync");
+                string[] availableSessions = Directory.GetFiles(OnesyncDir, "*.1sync");
 
                 if (availableSessions.Length == 0) return new string[0];
 
@@ -54,9 +83,14 @@ namespace Sessions
             }
             else
             {
-                Directory.CreateDirectory(Session.ONESYNC_DIR);
+                Directory.CreateDirectory(OnesyncDir);
             }
             return new string[] { };
+        }
+
+        private static string GetPath(string name)
+        {
+            return OnesyncDir + "\\" + name + ".1sync";
         }
     }
 }

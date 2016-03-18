@@ -34,8 +34,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -63,6 +67,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="CreateSessionDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -70,6 +78,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CreateSessionDialog.xaml.cs">
+      <DependentUpon>CreateSessionDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -106,13 +117,25 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Adobe\Adobe.csproj">
+      <Project>{eb717ed3-1d7a-4062-ba7e-b04973a16133}</Project>
+      <Name>Adobe</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Chrome\Chrome.csproj">
       <Project>{b0f90e7d-8d0f-44e6-8095-e962fec4bf9d}</Project>
       <Name>Chrome</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Office\Office.csproj">
+      <Project>{3f6d4da3-2c1e-4fda-b16c-f2c5d97a5bb8}</Project>
+      <Name>Office</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sesssions\Sesssions.csproj">
       <Project>{26dad3b4-5264-4653-a9a3-f0f3425fd3d2}</Project>
       <Name>Sesssions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Windows\Windows.csproj">
+      <Project>{45cead9a-3702-4fe1-b1c4-d282b7ec472f}</Project>
+      <Name>Windows</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
