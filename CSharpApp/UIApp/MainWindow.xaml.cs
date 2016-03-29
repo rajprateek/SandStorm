@@ -1,18 +1,20 @@
-﻿using Sessions;
-using Chrome;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Forms;
+using Autofac;
+using Chrome;
+using Newtonsoft.Json;
+using Sessions;
 using WebSocketSharp;
 using WebSocketSharp.Server;
-using System.Diagnostics;
-using Autofac;
-using UI = System.Windows.Controls;
-using Newtonsoft.Json;
+using Application = System.Windows.Application;
 using IContainer = Autofac.IContainer;
+using UI = System.Windows.Controls;
 
 namespace UIApp
 {
@@ -33,23 +35,26 @@ namespace UIApp
 
             var builder = new ContainerBuilder();
             builder.RegisterType<SessionManager>();
-            builder.RegisterType<Adobe.Acrobat>().As<ISessionHandler>();
-            builder.RegisterType<ChromeManager>().As<ISessionHandler>();
-            builder.RegisterType<Office.Office>().As<ISessionHandler>();
-            builder.RegisterType<Windows.Windows>().As<ISessionHandler>();
+
+            string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            builder.RegisterAssemblyTypes(Directory.GetFiles(path, "*.dll").Select(Assembly.LoadFile).ToArray()).AsImplementedInterfaces().As<ISessionHandler>();
+            //builder.RegisterType<Adobe.Acrobat>().As<ISessionHandler>();
+            //builder.RegisterType<ChromeManager>().As<ISessionHandler>();
+            //builder.RegisterType<Office.Office>().As<ISessionHandler>();
+            //builder.RegisterType<Windows.Windows>().As<ISessionHandler>();
             Container = builder.Build();
             
             WindowStartupLocation = WindowStartupLocation.Manual;
             Left = SystemParameters.WorkArea.Width - Width - 10;
             Top = SystemParameters.WorkArea.Height - Height - 10;
 
-            m_notifyIcon = new System.Windows.Forms.NotifyIcon();
+            m_notifyIcon = new NotifyIcon();
             m_notifyIcon.Text = "OneSync";
-            Icon icon = UIApp.Properties.Resources.icon;
+            Icon icon = Properties.Resources.icon;
             m_notifyIcon.Icon = new Icon(icon, 0, 0);
             m_notifyIcon.Click += new EventHandler(m_notifyIcon_Click);
 
-            ContextMenuStrip m_contextMenu = new System.Windows.Forms.ContextMenuStrip();
+            ContextMenuStrip m_contextMenu = new ContextMenuStrip();
             ToolStripMenuItem mI1 = new ToolStripMenuItem();
             mI1.Text = "Exit";
             mI1.Click += new EventHandler(ExitApp);
@@ -74,7 +79,7 @@ namespace UIApp
 
         private void ExitApp(object sender, EventArgs e)
         {
-            System.Windows.Application.Current.Shutdown();
+            Application.Current.Shutdown();
         }
 
         private void Exit(object sender, EventArgs e)
@@ -108,7 +113,7 @@ namespace UIApp
 
         private void m_notifyIcon_Click(object sender, EventArgs e)
         {
-            System.Windows.Forms.MouseEventArgs me = (System.Windows.Forms.MouseEventArgs)e;
+            MouseEventArgs me = (MouseEventArgs)e;
             if (me.Button == MouseButtons.Right) return;
             Show();
             WindowState = WindowState.Normal;
@@ -143,25 +148,25 @@ namespace UIApp
 
         public void OnListHover(object sender, EventArgs e)
         {
-            Grid grid = (Grid)sender;
-            UIElementCollection collection = grid.Children;
+            UI.Grid grid = (UI.Grid)sender;
+            UI.UIElementCollection collection = grid.Children;
 
             UI.Label label = (UI.Label)collection[0];
             label.Visibility = Visibility.Hidden;
 
-            Grid grid2 = (Grid)collection[1];
+            UI.Grid grid2 = (UI.Grid)collection[1];
             grid2.Visibility = Visibility.Visible;
         }
 
         public void OffListHover(object sender, EventArgs e)
         {
-            Grid grid = (Grid)sender;
-            UIElementCollection collection = grid.Children;
+            UI.Grid grid = (UI.Grid)sender;
+            UI.UIElementCollection collection = grid.Children;
 
             UI.Label label = (UI.Label)collection[0];
             label.Visibility = Visibility.Visible;
 
-            Grid grid2 = (Grid)collection[1];
+            UI.Grid grid2 = (UI.Grid)collection[1];
             grid2.Visibility = Visibility.Hidden;
         }
 
