@@ -3,6 +3,7 @@ using System.Diagnostics;
 using WebSocketSharp.Server;
 using Newtonsoft.Json;
 using Sessions;
+using System.Threading;
 
 namespace Chrome
 {
@@ -64,6 +65,8 @@ namespace Chrome
             if (tabsToRestore.Length == 0) return;
 
             Process.Start("chrome.exe");
+            Thread.Sleep(500);
+
             string msgToSend = "{\"type\":3, \"data\":" + JsonConvert.SerializeObject(tabsToRestore) + "}";
             socket.WebSocketServices["/extension"].Sessions.Broadcast(msgToSend);
         }

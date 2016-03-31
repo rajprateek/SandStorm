@@ -88,7 +88,7 @@ function openRunningTabs(json) {
     } else if (lastWindowIndex != tab.windowId) {
 	console.log("2");
       chrome.windows.create({ "focused": true });
-      chrome.windows.update(chrome.windows.WINDOW_ID_CURRENT, { "state": "maximized" });
+      chrome.windows.update(chrome.windows.WINDOW_ID_CURRENT, { "state": "normal" });
       lastWindowIndex = tab.windowId;
       chrome.tabs.update({ "url": tab.url });
     } else {
@@ -116,7 +116,7 @@ function onNativeMessage(message) {
   if(type==3){
   	  console.log("3 executed*******");
     var data = info.data;
-    sendMessage("Opening Tabs");
+    console.log("Opening Tabs");
     openRunningTabs(data);
 
   }
@@ -132,7 +132,7 @@ function onNativeMessage(message) {
   }
   else{
    	console.log("nothing executed*******");
-    sendMessage("Wrong command");
+    console.log("Wrong command");
   }
 }
 
